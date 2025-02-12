@@ -17,26 +17,11 @@ jobs:
       - name: Install Fortran compiler (gfortran)
         run: sudo apt-get update && sudo apt-get install gfortran
 
-      - name: Set up Python  # 虽然我们不运行 Python 脚本，但保留 Python 安装步骤可以避免一些潜在问题
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      # - name: Preprocess Fortran files (optional) # 注释掉预处理步骤
-      #   run: python preprocess.py
-
       - name: Compile MT3DMS
         run: |
           cd mt3dms5.3.0/src/true-binary/  # 进入源代码目录
           gfortran *.for -o mt3dms          # 编译所有 .for 文件
           cd ../../../                       # 返回到仓库根目录
-
-      - name: Test MT3DMS (optional)
-        run: |
-          # 示例：运行一些 MT3DMS 的测试用例
-          # ./mt3dms < test1.in > test1.out
-          # ./mt3dms < test2.in > test2.out
-          echo "No tests defined yet"
 
       - name: Upload MT3DMS executable (optional)
         uses: actions/upload-artifact@v4
