@@ -17,6 +17,9 @@ jobs:
       - name: Install Fortran compiler (gfortran)
         run: sudo apt-get update && sudo apt-get install gfortran
 
+      - name: Fix ustop calls in mt_tob5.for
+        run: sed -i 's/call ustop('' '')/stop/g' mt3dms5.3.0/src/true-binary/mt_tob5.for  # 使用 sed 命令替换
+
       - name: Compile MT3DMS
         run: |
           cd mt3dms5.3.0/src/true-binary/  # 进入源代码目录
