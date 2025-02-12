@@ -1,0 +1,45 @@
+name: Build MT3DMS  # 工作流的名称
+
+on: # 定义触发条件
+  push: # 当代码被推送到仓库时
+    branches:
+      - main  # 只在 main 分支上触发
+  pull_request: # 当有 pull request 时也触发
+
+jobs: # 定义任务
+  build: # 任务名称
+    runs-on: ubuntu-latest # 在 Ubuntu 最新版本的虚拟机上运行
+
+    steps: # 定义步骤
+      - name: Checkout code # 步骤名称：检出代码
+        uses: actions/checkout@v3 # 使用 actions/checkout@v3 这个 Action，它负责从 GitHub 仓库检出代码
+
+      - name: Install Fortran compiler (gfortran) # 步骤名称：安装 Fortran 编译器
+        run: sudo apt-get update && sudo apt-get install gfortran # 运行 shell 命令：更新软件包列表，然后安装 gfortran
+
+      - name: Set up Python # 步骤名称：设置 Python 环境
+        uses: actions/setup-python@v4 # 使用 actions/setup-python@v4 这个 Action，它负责安装 Python
+        with:
+          python-version: '3.x' # 指定 Python 版本
+
+      - name: Preprocess Fortran files (optional) # 步骤名称：预处理 Fortran 文件 (可选)
+        run: python preprocess.py  # 运行 Python 脚本 preprocess.py
+
+      - name: Compile MT3DMS # 步骤名称：编译 MT3DMS
+        run: | # 运行多行 shell 命令
+          cd mt3dms5.3.0/src/true-binary/  # 进入源代码目录
+          gfortran *.for -o mt3dms          # 编译所有 .for 文件，生成可执行文件 mt3dms
+          cd ../../../                       # 返回到仓库根目录
+
+      - name: Test MT3DMS (optional) # 步骤名称：测试 MT3DMS (可选)
+        run: | # 运行多行 shell 命令
+          # 示例：运行一些 MT3DMS 的测试用例
+          # ./mt3dms < test1.in > test1.out
+          # ./mt3dms < test2.in > test2.out
+          echo "No tests defined yet" # 如果没有测试用例，打印一条消息
+
+      - name: Upload MT3DMS executable (optional) # 步骤名称：上传 MT3DMS 可执行文件 (可选)
+        uses: actions/upload-artifact@v3 # 使用 actions/upload-artifact@v3 这个 Action，它负责上传 Artifact
+        with:
+          name: mt3dms-executable # Artifact 的名称
+          path: mt3dms5.3.0/src/true-binary/mt3dms # 要上传的文件路径
