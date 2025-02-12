@@ -18,7 +18,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install gfortran
 
       - name: Fix ustop calls in mt_tob5.for
-        run: sed -i 's/call ustop('' '')/stop/g' mt3dms5.3.0/src/true-binary/mt_tob5.for  # 使用 sed 命令替换
+        run: sed -i "s/call ustop(' ')/call ustop('')/g" mt3dms5.3.0/src/true-binary/mt_tob5.for  # 使用 sed 命令替换，替换为空字符串
 
       - name: Compile MT3DMS
         run: |
